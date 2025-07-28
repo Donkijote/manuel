@@ -54,7 +54,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release/${{ steps.update_version.outputs.version }}
+          branch: sync/release-${{ steps.update_version.outputs.version }}
           title: "Sync Release: ${{ steps.update_version.outputs.version }} Pull Request"
           body: "This pull request contains the updated package.json with the upcoming release version"
           base: main

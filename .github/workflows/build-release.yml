@@ -11,7 +11,11 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'release/major') || contains(github.event.pull_request.labels.*.name, 'release/minor') || contains(github.event.pull_request.labels.*.name, 'release/patch') || contains(github.event.pull_request.labels.*.name, 'release/current')
+    if: (contains(github.event.pull_request.labels.*.name, 'release/major') 
+      || contains(github.event.pull_request.labels.*.name, 'release/minor') 
+      || contains(github.event.pull_request.labels.*.name, 'release/patch') 
+      || contains(github.event.pull_request.labels.*.name, 'release/current'))
+      && github.event.pull_request.merged == true
 
     steps:
       - name: Checkout
@@ -42,6 +46,7 @@ jobs:
         id: get_tag
         run: |
           git branch --show-current
+          git checkout ${{github.event.pull_request.head.ref}}
           git pull
           echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
 

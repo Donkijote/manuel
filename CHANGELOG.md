@@ -3,10 +3,4 @@
 ## [Unreleased]
 
 ### Added
-- something
-
-### Updated
-- something
-
-### fixed
-- something
+- Workflows to test versioning

@@ -64,4 +64,15 @@ jobs:
       - name: Update Changelog
         id: update_changelog
         run: |
-          sed -i 's/Unreleased/${{ steps.update_version.outputs.version }}/g' CHANGELOG.md
+          sed -i '/\[Unreleased\]/a ## [${{ steps.update_version.outputs.version }}]' CHANGELOG.md
+          sed -i '/\[Unreleased\]/a\\'
+
+      - name: Create pull request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/${{ steps.update_version.outputs.version }}
+          title: "Sync Release: ${{ steps.update_version.outputs.version }} Pull Request"
+          body: "This pull request contains the updated package.json with the upcoming release version"
+          base: main

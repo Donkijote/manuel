@@ -15,6 +15,7 @@ jobs:
       || contains(github.event.pull_request.labels.*.name, 'release/minor') 
       || contains(github.event.pull_request.labels.*.name, 'release/patch') 
       || contains(github.event.pull_request.labels.*.name, 'release/current'))
+      && github.event.pull_request.merged == true
 
     steps:
       - name: Checkout

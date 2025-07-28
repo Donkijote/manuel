@@ -41,9 +41,9 @@ jobs:
       - name: Get tag version
         id: get_tag
         run: |
-          git branch --show-current
           git fetch
-          git checkout ${{github.ref}}
+          git branch --show-current
+          git checkout ${{github.event.pull_request.head.ref}}
           git pull
           echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
 

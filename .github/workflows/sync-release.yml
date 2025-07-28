@@ -1,4 +1,5 @@
 name: Sync Release
+
 on:
   workflow_run:
     workflows:
@@ -32,33 +33,14 @@ jobs:
           git config user.name "Manuel Gonçalves"
           git config user.email "manuelmjgc@gmail.com"
 
-      - name: Get Main Version
-        id: get_main_version
-        run: |
-          git checkout main
-          git pull
-          echo "current_main_version=$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
-
-      - name: Get Develop Version
-        id: get_develop_version
-        run: |
-          git checkout develop
-          git pull
-          echo "current_develop_version=$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
-
       - name: Update Version
         id: update_version
-        if: ${{steps.get_main_version.outputs.current_main_version == steps.get_develop_version.outputs.current_develop_version}}
         run: |
+          git fetch
+          git branch --show-current
+          git checkout ${{github.event.pull_request.head.ref}}
+          git pull
           echo "Correct Package Version"
-          echo "version=$(pnpm version minor --no-git-tag-version)" >> $GITHUB_OUTPUT
-
-      - name: Update Version Fallback
-        id: update_version
-        if: ${{steps.get_main_version.outputs.current_main_version != steps.get_develop_version.outputs.current_develop_version}}
-        run: |
-          echo "Problem comparing Package version, taking main branch version as ref"
-          pnpm version ${{steps.get_main_version.outputs.current_main_version}} --no-git-tag-version
           echo "version=$(pnpm version minor --no-git-tag-version)" >> $GITHUB_OUTPUT
 
       - name: Update Changelog

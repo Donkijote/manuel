@@ -47,7 +47,7 @@ jobs:
         id: update_changelog
         run: |
           sed -i '/\[Unreleased\]/a ## [${{ steps.update_version.outputs.version }}]' CHANGELOG.md
-          sed -i '/\[Unreleased\]/a\\'
+          sed -i '/\[Unreleased\]/a\\' CHANGELOG.md
 
       - name: Create pull request
         id: create_pr

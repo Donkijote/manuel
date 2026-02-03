@@ -1,0 +1,67 @@
+name: Sync main to develop
+
+on:
+  workflow_run:
+    workflows: ["Deploy release"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Create sync branch and PR
+        uses: actions/github-script@v7
+        env:
+          SYNC_LABEL: kind/internal
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const label = process.env.SYNC_LABEL;
+
+            const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const branch = `sync/main-to-develop-${date}-${context.runId}`;
+
+            const { data: mainRef } = await github.rest.git.getRef({
+              owner,
+              repo,
+              ref: 'heads/main',
+            });
+
+            await github.rest.git.createRef({
+              owner,
+              repo,
+              ref: `refs/heads/${branch}`,
+              sha: mainRef.object.sha,
+            });
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner,
+              repo,
+              title: 'Sync main to develop',
+              head: branch,
+              base: 'develop',
+              body: 'Automated sync after release to keep develop up to date with main.',
+            });
+
+            try {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: pr.number,
+                labels: [label],
+              });
+            } catch (err) {
+              core.warning(`Failed to add label "${label}": ${err.message}`);
+            }

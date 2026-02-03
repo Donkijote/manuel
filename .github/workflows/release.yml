@@ -146,7 +146,7 @@ jobs:
             const until = new Date().toISOString();
 
             const labelToSection = {
-              'kind/fixture': 'Added',
+              'kind/feature': 'Added',
               'kind/improvement': 'Updated',
               'kind/bug': 'Fixed',
               'kind/hotfix': 'Fixed',
@@ -154,17 +154,24 @@ jobs:
             const sectionOrder = ['Added', 'Updated', 'Fixed'];
             const sections = { Added: [], Updated: [], Fixed: [] };
 
-            const query = `repo:${owner}/${repo} is:issue is:closed closed:>=${since} closed:<=${until}`;
+            const sinceDate = new Date(since);
+            const untilDate = new Date(until);
             const per_page = 100;
             let page = 1;
             while (true) {
-              const res = await github.rest.search.issuesAndPullRequests({
-                q: query,
+              const res = await github.rest.issues.listForRepo({
+                owner,
+                repo,
+                state: 'closed',
+                since: sinceDate.toISOString(),
                 per_page,
                 page,
               });
-              for (const item of res.data.items) {
+              for (const item of res.data) {
                 if (item.pull_request) continue;
+                if (!item.closed_at) continue;
+                const closedAt = new Date(item.closed_at);
+                if (closedAt <= sinceDate || closedAt > untilDate) continue;
                 const labels = (item.labels || []).map((l) => (typeof l === 'string' ? l : l.name));
                 let section = null;
                 for (const key of Object.keys(labelToSection)) {
@@ -176,10 +183,10 @@ jobs:
                 if (!section) continue;
                 sections[section].push({
                   line: `- [GHI#${item.number}](${item.html_url}) ${item.title}`,
-                  closed_at: item.closed_at || '',
+                  closed_at: item.closed_at,
                 });
               }
-              if (res.data.items.length < per_page) break;
+              if (res.data.length < per_page) break;
               page += 1;
             }
 

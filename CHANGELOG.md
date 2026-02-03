@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.4] - 2026-02-03
+
+### Added
+
+- [GHI#12](https://github.com/Donkijote/manuel/issues/12) Demo fixture issue
+- [GHI#17](https://github.com/Donkijote/manuel/issues/17) Demo fixture issue 2
+- [GHI#23](https://github.com/Donkijote/manuel/issues/23) Demo fixture issue 3
+
+### Updated
+
+- [GHI#13](https://github.com/Donkijote/manuel/issues/13) Demo improvement issue
+- [GHI#18](https://github.com/Donkijote/manuel/issues/18) Demo improvement issue 2
+- [GHI#24](https://github.com/Donkijote/manuel/issues/24) Demo improvement issue 3
+
+### Fixed
+
+- [GHI#14](https://github.com/Donkijote/manuel/issues/14) Demo bug issue
+- [GHI#19](https://github.com/Donkijote/manuel/issues/19) Demo bug issue 2
+- [GHI#25](https://github.com/Donkijote/manuel/issues/25) Demo bug issue 3
+
+
 ## [0.0.3] - 2026-02-03
 
 ### Added

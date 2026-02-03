@@ -146,7 +146,7 @@ jobs:
             const until = new Date().toISOString();
 
             const labelToSection = {
-              'kind/fixture': 'Added',
+              'kind/feature': 'Added',
               'kind/improvement': 'Updated',
               'kind/bug': 'Fixed',
               'kind/hotfix': 'Fixed',

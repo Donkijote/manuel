@@ -87,8 +87,7 @@ jobs:
           git checkout -b "$branch"
           echo "name=$branch" >> "$GITHUB_OUTPUT"
 
-      - name: Bump version for develop (force)
-        if: steps.labels.outputs.force == 'true'
+      - name: Bump version for develop
         run: |
           bump="${{ steps.labels.outputs.bump }}"
           if [ "$bump" = "major" ]; then

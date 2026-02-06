@@ -212,6 +212,10 @@ jobs:
 
             const changelogPath = 'CHANGELOG.md';
             const content = fs.readFileSync(changelogPath, 'utf8');
+            if (content.includes(`## [${version}]`)) {
+              core.info(`Changelog already contains version ${version}. Skipping update.`);
+              return;
+            }
             const header = '## [Unreleased]';
             const headerIndex = content.indexOf(header);
             if (headerIndex === -1) {

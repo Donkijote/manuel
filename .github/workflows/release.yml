@@ -90,6 +90,13 @@ jobs:
         run: |
           node -e "const p=require('./package.json'); console.log('version=' + p.version)" >> "$GITHUB_OUTPUT"
 
+      - name: Set build metadata
+        id: build_meta
+        run: |
+          build_number="${GITHUB_RUN_NUMBER}"
+          echo "build_number=${build_number}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${{ steps.version.outputs.version }} (${build_number})" >> "$GITHUB_OUTPUT"
+
       - name: Get previous tag date
         id: prev_tag
         run: |
@@ -119,6 +126,8 @@ jobs:
 
       - name: Build
         run: |
+          export BUILD_NUMBER="${{ steps.build_meta.outputs.build_number }}"
+          export VITE_BUILD_NUMBER="${{ steps.build_meta.outputs.build_number }}"
           if [ "${{ steps.pm.outputs.pm }}" = "bun" ]; then
             export BUN_INSTALL="$HOME/.bun"
             export PATH="$BUN_INSTALL/bin:$PATH"
@@ -249,12 +258,12 @@ jobs:
 
       - name: Create tag
         run: |
-          git tag "v${{ steps.version.outputs.version }}"
-          git push origin "v${{ steps.version.outputs.version }}"
+          git tag "${{ steps.build_meta.outputs.tag }}"
+          git push origin "${{ steps.build_meta.outputs.tag }}"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v${{ steps.version.outputs.version }}"
-          name: "v${{ steps.version.outputs.version }}"
+          tag_name: "${{ steps.build_meta.outputs.tag }}"
+          name: "${{ steps.build_meta.outputs.tag }}"
           generate_release_notes: true

@@ -22,6 +22,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
+          token: ${{ secrets.BOT_PAT }}
 
       - name: Configure git author
         run: |

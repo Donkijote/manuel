@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.10] - 2026-02-06
+
+### Added
+
+- [GHI#56](https://github.com/Donkijote/manuel/issues/56) Demo feature issue 9
+
+### Updated
+
+- [GHI#57](https://github.com/Donkijote/manuel/issues/57) Demo improvement issue 9
+
+### Fixed
+
+- [GHI#58](https://github.com/Donkijote/manuel/issues/58) Demo bug issue 9
+
+
 ## [0.0.9] - 2026-02-06
 
 ### Added
